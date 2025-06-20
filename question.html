@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jeopardy Question</title>
+  <style>
+    body {
+      background-color: #000428;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .player-area {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .player img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      margin-bottom: 5px;
+    }
+
+    .score {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .adjust-btn {
+      padding: 5px 10px;
+      margin: 2px;
+      background-color: #fcd000;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .adjust-btn:hover {
+      background-color: #e0b800;
+    }
+
+    .question-box {
+      margin: 40px auto;
+      max-width: 600px;
+      background: #1a1a40;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+
+    #backBtn {
+      margin-top: 30px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="categoryHeader">Category</h1>
+
+  <div class="player-area" id="playerDisplay"></div>
+
+    <div class="question-box">
+    <div id="questionDisplay">[Question here]</div>
+    <button id="revealBtn" class="adjust-btn" style="margin-top: 20px;">Reveal Answer</button>
+    <div id="answerDisplay" style="display: none; margin-top: 15px; font-size: 20px;"></div>
+    </div>
+
+  <button id="backBtn" class="adjust-btn">Back to Board</button>
+  <button id="markUsedBtn" class="adjust-btn" style="background-color: #888; margin-top: 15px; font-size: 18px;">Mark as Used & Continue</button>
+
+  <script>
+    const playerDisplay = document.getElementById("playerDisplay");
+    const players = JSON.parse(sessionStorage.getItem("players")) || [];
+    const meta = JSON.parse(sessionStorage.getItem("questionMeta")) || { category: "Unknown", points: 0 };
+
+    document.getElementById("categoryHeader").innerText = `${meta.category} - $${meta.points}`;
+    document.getElementById("questionDisplay").innerText = meta.question || "Question missing";
+
+    document.getElementById("revealBtn").addEventListener("click", () => {
+    const answerBox = document.getElementById("answerDisplay");
+    answerBox.innerText = `Answer: ${meta.answer || "Answer missing"}`;
+    answerBox.style.display = "block";
+    });
+
+    players.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.className = "player";
+        div.innerHTML = `
+        <img src="${p.icon}" alt="${p.name}" />
+        <div>${p.name}</div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="adjust-btn" style="background-color: #4CAF50;" onclick="adjustScore(${i}, ${meta.points})">+</button>
+            <div class="score" id="score-${i}" style="min-width: 40px;">${p.score || 0}</div>
+            <button class="adjust-btn" style="background-color: #e74c3c;" onclick="adjustScore(${i}, -${meta.points})">–</button>
+        </div>
+        `;
+      playerDisplay.appendChild(div);
+    });
+
+    function adjustScore(index, change) {
+    players[index].score = (players[index].score || 0) + change;
+    document.getElementById(`score-${index}`).innerText = players[index].score;
+    sessionStorage.setItem("players", JSON.stringify(players)); // <-- persists
+    }
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+    window.location.href = meta.fromBoard;
+    });
+
+    document.getElementById("markUsedBtn").addEventListener("click", () => {
+    let usedTiles = JSON.parse(sessionStorage.getItem("usedTiles") || "[]");
+    const tileKey = `${meta.col}-${meta.row}`;
+    if (!usedTiles.includes(tileKey)) {
+        usedTiles.push(tileKey);
+        sessionStorage.setItem("usedTiles", JSON.stringify(usedTiles));
+    }
+    window.location.href = meta.fromBoard;
+    });
+  </script>
+</body>
+</html>

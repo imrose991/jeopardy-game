@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Final Jeopardy</title>
+  <style>
+    body {
+      background-color: #000428;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .player-area {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .player img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      margin-bottom: 5px;
+    }
+
+    .score {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .question-box {
+      margin: 30px auto;
+      max-width: 700px;
+      background: #1a1a40;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 24px;
+    }
+
+    .adjust-btn {
+      padding: 6px 12px;
+      margin: 4px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: #fcd000;
+    }
+
+    .adjust-btn:hover {
+      background-color: #e0b800;
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 5px;
+      text-align: center;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+
+    #timer {
+      font-size: 28px;
+      margin-top: 20px;
+    }
+
+    #answerSection {
+      margin-top: 30px;
+      font-size: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎉 Final Jeopardy 🎉</h1>
+
+  <div class="player-area" id="playerDisplay"></div>
+
+  <div class="question-box">
+    <div id="finalQuestion">This is the Final Jeopardy question!</div>
+    <button class="adjust-btn" onclick="startTimer()">Start 30s Timer</button>
+    <div id="timer">⏱️ 30</div>
+  </div>
+
+  <div id="answerSection">
+    <h2>Reveal Answer</h2>
+    <div id="finalAnswer">[The correct answer goes here]</div>
+    <br />
+    <button class="adjust-btn" onclick="toggleAnswer()">Show/Hide Answer</button>
+  </div>
+
+  <script>
+    const playerDisplay = document.getElementById("playerDisplay");
+    const players = JSON.parse(sessionStorage.getItem("players")) || [];
+
+    // Set your final question and answer here
+    const finalQuestion = "What is the name of the tallest mountain in the world?";
+    const finalAnswer = "Mount Everest";
+
+    document.getElementById("finalQuestion").innerText = finalQuestion;
+    document.getElementById("finalAnswer").innerText = "Answer: " + finalAnswer;
+
+    players.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.className = "player";
+      div.innerHTML = `
+        <img src="${p.icon}" alt="${p.name}" />
+        <div>${p.name}</div>
+        <div class="score" id="score-${i}">${p.score || 0}</div>
+        <div>
+          Wager: <input type="number" id="wager-${i}" min="0" max="${Math.abs(p.score || 0)}" />
+        </div>
+        <div style="margin-top: 6px;">
+          <button class="adjust-btn" onclick="applyWager(${i}, true)">Correct</button>
+          <button class="adjust-btn" onclick="applyWager(${i}, false)">Wrong</button>
+        </div>
+      `;
+      playerDisplay.appendChild(div);
+    });
+
+    function applyWager(index, isCorrect) {
+      const wagerInput = document.getElementById(`wager-${index}`);
+      let wager = parseInt(wagerInput.value) || 0;
+
+      if (wager < 0) wager = 0;
+      const scoreChange = isCorrect ? wager : -wager;
+
+      players[index].score = (players[index].score || 0) + scoreChange;
+      document.getElementById(`score-${index}`).innerText = players[index].score;
+
+      sessionStorage.setItem("players", JSON.stringify(players));
+    }
+
+    function toggleAnswer() {
+      const section = document.getElementById("answerSection");
+      section.style.display = section.style.display === "none" ? "block" : "none";
+    }
+
+    function startTimer() {
+      let time = 30;
+      const timerEl = document.getElementById("timer");
+      const interval = setInterval(() => {
+        time--;
+        timerEl.innerText = `⏱️ ${time}`;
+        if (time <= 0) {
+          clearInterval(interval);
+          timerEl.innerText = "⏱️ Time's up!";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

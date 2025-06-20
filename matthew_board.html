@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jeopardy Board</title>
+  <style>
+    body {
+      background-color: #000428;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .player-area {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 50px;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .player img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      margin-bottom: 5px;
+    }
+
+    .score {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .cell {
+      background-color: #1a1aff;
+      color: white;
+      font-size: 24px;
+      padding: 20px;
+      border: 2px solid #000080;
+      cursor: pointer;
+    }
+
+    .cell:hover {
+      background-color: #3333ff;
+    }
+
+    .category {
+      background-color: #000080;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .used {
+      background-color: #333;
+      color: #888;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <h1>Birthday Jeopardy!</h1>
+
+  <!-- 🎭 Player Avatars + Scores -->
+  <div class="player-area" id="playerDisplay"></div>
+
+  <!-- 🟦 Jeopardy Grid -->
+  <div class="board" id="jeopardyBoard"></div>
+
+  <script>
+    if (!sessionStorage.getItem("matthewBoardInitialized")) {
+        sessionStorage.removeItem("usedTiles"); // Clear old tile state
+        sessionStorage.setItem("matthewBoardInitialized", "true"); // Prevent future resets
+    }
+
+    const playerDisplay = document.getElementById("playerDisplay");
+    const board = document.getElementById("jeopardyBoard");
+
+    const players = JSON.parse(sessionStorage.getItem("players")) || [];
+
+    // Category names must match your data
+    const categoryNames = [
+        "Favourite things",
+        "Matthew Trivia",
+        "4C Trivia",
+        "Category 4",      // You can rename this later
+        "Who is that"
+    ];
+
+    const questionData = [
+        // Favourite things
+        [
+        { q: "What is the capital of France?", a: "Paris" },
+        { q: "What is 2 + 2?", a: "4" },
+        { q: "What color is the sky?", a: "Blue" },
+        { q: "What gas do we breathe?", a: "Oxygen" },
+        { q: "What is H2O?", a: "Water" }
+        ],
+        // Matthew Trivia
+        [
+        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
+        { q: "What is the fastest land animal?", a: "Cheetah" },
+        { q: "What planet is known as the Red Planet?", a: "Mars" },
+        { q: "How many continents are there?", a: "7" },
+        { q: "What is the hardest natural substance?", a: "Diamond" }
+        ],
+        // 4C Trivia
+        [
+        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
+        { q: "What is the fastest land animal?", a: "Cheetah" },
+        { q: "What planet is known as the Red Planet?", a: "Mars" },
+        { q: "How many continents are there?", a: "7" },
+        { q: "What is the hardest natural substance?", a: "Diamond" }
+        ],
+        // Category 4
+        [
+        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
+        { q: "What is the fastest land animal?", a: "Cheetah" },
+        { q: "What planet is known as the Red Planet?", a: "Mars" },
+        { q: "How many continents are there?", a: "7" },
+        { q: "What is the hardest natural substance?", a: "Diamond" }
+        ],
+        // Who is that
+        [
+        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
+        { q: "What is the fastest land animal?", a: "Cheetah" },
+        { q: "What planet is known as the Red Planet?", a: "Mars" },
+        { q: "How many continents are there?", a: "7" },
+        { q: "What is the hardest natural substance?", a: "Diamond" }
+        ],
+    ];
+
+    // Show players
+    players.forEach((p, i) => {
+        const div = document.createElement("div");
+        div.className = "player";
+        div.innerHTML = `
+        <img src="${p.icon}" alt="${p.name}" />
+        <div>${p.name}</div>
+        <div class="score" id="score-${i}">${p.score || 0}</div>
+        `;
+        playerDisplay.appendChild(div);
+    });
+
+    // Add category headers
+    categoryNames.forEach(cat => {
+        const cell = document.createElement("div");
+        cell.className = "cell category";
+        cell.innerText = cat;
+        board.appendChild(cell);
+    });
+
+    // Add question tiles
+    const pointValues = [200, 400, 600, 800, 1000];
+    let usedTiles = JSON.parse(sessionStorage.getItem("usedTiles") || "[]");
+
+    for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 5; col++) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.dataset.value = pointValues[row];
+            cell.dataset.row = row;
+            cell.dataset.col = col;
+            cell.innerText = `$${pointValues[row]}`;
+
+            const tileKey = `${col}-${row}`;
+            if (usedTiles.includes(tileKey)) {
+            cell.classList.add("used");
+            cell.style.pointerEvents = "none";
+            }
+
+            cell.addEventListener("click", () => {
+            if (cell.classList.contains("used")) return;
+
+            const question = questionData[col][row]; // [category][row]
+            sessionStorage.setItem("questionMeta", JSON.stringify({
+              category: categoryNames[col],
+              points: pointValues[row],
+              row,
+              col,
+              question: question.q,
+              answer: question.a,
+              fromBoard: window.location.pathname
+            }));
+
+            window.location.href = "question.html";
+            });
+
+            board.appendChild(cell);
+        }
+    }
+
+    function checkAllTilesUsed() {
+      const totalTiles = 25;
+      const usedTiles = JSON.parse(sessionStorage.getItem("usedTiles") || "[]");
+      if (usedTiles.length === totalTiles) {
+        const nextBtn = document.createElement("button");
+        nextBtn.innerText = "Continue to Next Round";
+        nextBtn.style.padding = "15px 30px";
+        nextBtn.style.fontSize = "20px";
+        nextBtn.style.marginTop = "30px";
+        nextBtn.style.backgroundColor = "#fcd000";
+        nextBtn.style.border = "none";
+        nextBtn.style.cursor = "pointer";
+        nextBtn.onclick = () => {
+          window.location.href = "final.html";
+        };
+        document.body.appendChild(nextBtn);
+      }
+    }
+
+    // Run it after the grid is created
+    checkAllTilesUsed();
+
+    </script>
+</body>
+</html>

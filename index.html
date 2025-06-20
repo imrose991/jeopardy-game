@@ -42,6 +42,29 @@
     #startGameBtn {
       display: none;
     }
+
+    .player-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px;
+    }
+
+    .icon-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0 10px;
+      border: 1px solid white;
+      object-fit: cover;
+    }
+
+    .reroll-btn {
+      font-size: 20px;
+      padding: 5px 10px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -49,7 +72,11 @@
 
   <div id="players">
     <h2>Players</h2>
-    <div id="playerList"></div>
+
+    <!-- 🧍 Players will appear here -->
+    <div id="playerList" style="display: flex; flex-direction: column; align-items: center;"></div>
+
+    <!-- ➕ Add and Start buttons -->
     <button id="addPlayerBtn">+ Add Player</button>
     <button id="startGameBtn">Start Game</button>
   </div>
@@ -59,30 +86,76 @@
     const playerList = document.getElementById("playerList");
     const startGameBtn = document.getElementById("startGameBtn");
 
+    const iconList = [
+      "dog.jpg",
+      "fns.jpg",
+      "isaac.jpg",
+      "matthew.jpg",
+      "monkey.jpg",
+      "nic.jpg",
+      "penguin.jpg",
+      "pikachu.jpg",
+      "baby.jpg",
+      "gru.jpg",
+      "chloe.jpg"
+    ]; 
+
     let playerCount = 0;
 
     addPlayerBtn.addEventListener("click", () => {
+      const playerWrapper = document.createElement("div");
+      playerWrapper.className = "player-wrapper";
+
       const input = document.createElement("input");
       input.type = "text";
       input.placeholder = `Player ${playerCount + 1} name`;
       input.className = "player-input";
       input.required = true;
-      playerList.appendChild(input);
-      playerCount++;
+      input.style.marginRight = "10px";
 
+      // Icon container
+      const iconImg = document.createElement("img");
+      iconImg.className = "icon-img";
+
+      function setRandomIcon() {
+        const iconFile = iconList[Math.floor(Math.random() * iconList.length)];
+        iconImg.src = `icons/${iconFile}`;
+        iconImg.alt = iconFile.split(".")[0];
+      }
+
+      setRandomIcon(); // Set initial icon
+
+      // Reroll button
+      const rerollBtn = document.createElement("button");
+      rerollBtn.className = "reroll-btn";
+      rerollBtn.textContent = "🎲";
+      rerollBtn.title = "Reroll Icon";
+      rerollBtn.addEventListener("click", setRandomIcon);
+
+      // Assemble
+      playerWrapper.appendChild(input);
+      playerWrapper.appendChild(iconImg);
+      playerWrapper.appendChild(rerollBtn);
+      playerList.appendChild(playerWrapper);
+
+      playerCount++;
       if (playerCount > 0) {
         startGameBtn.style.display = "inline-block";
       }
     });
 
     startGameBtn.addEventListener("click", () => {
-      const names = Array.from(document.querySelectorAll(".player-input"))
-        .map(input => input.value.trim())
-        .filter(name => name.length > 0);
+      const players = Array.from(document.querySelectorAll(".player-wrapper"))
+        .map(wrapper => {
+          const name = wrapper.querySelector(".player-input").value.trim();
+          const icon = wrapper.querySelector(".icon-img").src;
+          return name ? { name, icon } : null; // Skip if name is empty
+        })
+        .filter(player => player !== null); // Keep only valid players
 
-      if (names.length > 0) {
-        alert("Starting game with: " + names.join(", "));
-        // Redirect or show board here later
+      if (players.length > 0) {
+        sessionStorage.setItem("players", JSON.stringify(players));
+        window.location.href = "nic_board.html";
       } else {
         alert("Please enter at least one player name.");
       }
