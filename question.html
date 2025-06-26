@@ -81,8 +81,8 @@
     <div id="answerDisplay" style="display: none; margin-top: 15px; font-size: 20px;"></div>
     </div>
 
-  <button id="backBtn" class="adjust-btn">Back to Board</button>
-  <button id="markUsedBtn" class="adjust-btn" style="background-color: #888; margin-top: 15px; font-size: 18px;">Mark as Used & Continue</button>
+  <button id="backBtn" class="adjust-btn" style="background-color: #888;">Back to Board</button>
+  <button id="markUsedBtn" class="adjust-btn" style="margin-top: 15px; font-size: 18px;">Used & Continue</button>
 
   <script>
     const playerDisplay = document.getElementById("playerDisplay");
@@ -90,12 +90,26 @@
     const meta = JSON.parse(sessionStorage.getItem("questionMeta")) || { category: "Unknown", points: 0 };
 
     document.getElementById("categoryHeader").innerText = `${meta.category} - $${meta.points}`;
-    document.getElementById("questionDisplay").innerText = meta.question || "Question missing";
+    const questionBox = document.getElementById("questionDisplay");
+
+    if (meta.isImage) {
+      questionBox.innerHTML = `<img src="${meta.question}" alt="Who is that?" style="max-width: 100%; border-radius: 10px; border: 3px solid white;">`;
+    } else {
+      questionBox.innerText = meta.question || "Question missing";
+    }
 
     document.getElementById("revealBtn").addEventListener("click", () => {
-    const answerBox = document.getElementById("answerDisplay");
-    answerBox.innerText = `Answer: ${meta.answer || "Answer missing"}`;
-    answerBox.style.display = "block";
+      const answerBox = document.getElementById("answerDisplay");
+
+      if (meta.isImage) {
+        // Show the original image
+        answerBox.innerHTML = `<img src="${meta.answer}" alt="Answer image" style="max-width: 100%; border-radius: 10px; border: 3px solid white;">`;
+      } else {
+        // Show text answer
+        answerBox.innerText = `Answer: ${meta.answer || "Answer missing"}`;
+      }
+
+      answerBox.style.display = "block";
     });
 
     players.forEach((p, i) => {

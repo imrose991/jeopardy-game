@@ -55,7 +55,7 @@
       border: none;
       cursor: pointer;
       border-radius: 4px;
-      font-size: 14px;
+      font-size: 18px;
       background-color: #fcd000;
     }
 
@@ -100,14 +100,17 @@
     <br />
     <button class="adjust-btn" onclick="toggleAnswer()">Show/Hide Answer</button>
   </div>
+  <div style="margin-top: 50px;">
+    <button class="adjust-btn" onclick="goToFastMoney()">➡️ Go to Fast Money</button>
+  </div>
 
   <script>
     const playerDisplay = document.getElementById("playerDisplay");
     const players = JSON.parse(sessionStorage.getItem("players")) || [];
 
     // Set your final question and answer here
-    const finalQuestion = "What is the name of the tallest mountain in the world?";
-    const finalAnswer = "Mount Everest";
+    const finalQuestion = "What was the exact date that most of us met each other as a group in real life ";
+    const finalAnswer = "26483";
 
     document.getElementById("finalQuestion").innerText = finalQuestion;
     document.getElementById("finalAnswer").innerText = "Answer: " + finalAnswer;
@@ -159,6 +162,15 @@
           timerEl.innerText = "⏱️ Time's up!";
         }
       }, 1000);
+    }
+
+    function goToFastMoney() {
+      const topTwo = [...players]
+        .sort((a, b) => (b.score || 0) - (a.score || 0))
+        .slice(0, 2);
+
+      sessionStorage.setItem("fastMoneyPlayers", JSON.stringify(topTwo));
+      window.location.href = "fast_money.html";
     }
   </script>
 </body>

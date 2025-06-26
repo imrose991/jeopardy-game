@@ -99,50 +99,50 @@
         "Favourite things",
         "Nic Trivia",
         "4C Trivia",
-        "Category 4",      // You can rename this later
+        "Preferences",
         "Who is that"
     ];
 
     const questionData = [
         // Favourite things
         [
-        { q: "What is the capital of France?", a: "Paris" },
-        { q: "What is 2 + 2?", a: "4" },
-        { q: "What color is the sky?", a: "Blue" },
-        { q: "What gas do we breathe?", a: "Oxygen" },
-        { q: "What is H2O?", a: "Water" }
+        { q: "This is Nicolas favourite cuisine", a: "Italian" },
+        { q: "This is Nicolas favourite country to travel to\na) Netherlands\nb) Switzerland\nc) Italy\nd) Australia", a: "Switzerland" },
+        { q: "This is Nicolas favourite animal\na) Sloth\nb) Bear\nc) Panda\nd) Artic Fox", a: "Sloth" },
+        { q: "This is Nicolas favourite snack\na) Kinder Bueno\nb) Calbee Hot and Spicy\nc) Kit Kat\nd) Mamee", a: "Kit Kat" },
+        { q: "This is Nicolas favourite movie/tv show\na) A Man Called Otto\nb) The Lincoln Lawyer\nc) Guardian the Lonely And Great God\nd) When Life Gives You Tangerines", a: "A Man Called Otto" }
         ],
         // Nic Trivia
         [
-        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
-        { q: "What is the fastest land animal?", a: "Cheetah" },
-        { q: "What planet is known as the Red Planet?", a: "Mars" },
-        { q: "How many continents are there?", a: "7" },
-        { q: "What is the hardest natural substance?", a: "Diamond" }
+        { q: "This is Nicolas cca that they were in during secondary school", a: "Table Tennis" },
+        { q: "This is the first app Nicolas open when he wakes up\na) Instagram\nb) Telegram\nc) Financial Times\nd) Moomoo", a: "Financial Times" },
+        { q: "This is the first person Nicolas know in the server", a: "Samuel" },
+        { q: "This is something Nicolas keep procrastinating\na) Practical Driving class\nb) Going back to the gym\nc)", a: "Practical driving class" },
+        { q: "Which fact of Nicolas is true\na) Nicolas had cold shower for a month cause he thought it was better for him\nb) Nicolas almost got kidnapped when he went to europe\nc) Nicolas tried to learn the violin during covid", a: "Nicolas almost got kidnapped when he went to europe" }
         ],
         // 4C Trivia
         [
-        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
-        { q: "What is the fastest land animal?", a: "Cheetah" },
-        { q: "What planet is known as the Red Planet?", a: "Mars" },
-        { q: "How many continents are there?", a: "7" },
-        { q: "What is the hardest natural substance?", a: "Diamond" }
+        { q: "How many people in 4C group are left handed", a: "2" },
+        { q: "Who has sent the longest single message in the group chat", a: "Chloe" },
+        { q: "Who has sent the most messages in the group chat", a: "Keefer" },
+        { q: "How many siblings does everyone have? (include keefer and samuel)", a: "13" },
+        { q: "What is the combined number of unique countries that Isaac, Nic and Matthew have traveled to", a: "" }
         ],
-        // Category 4
+        // Preferences
         [
-        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
-        { q: "What is the fastest land animal?", a: "Cheetah" },
-        { q: "What planet is known as the Red Planet?", a: "Mars" },
-        { q: "How many continents are there?", a: "7" },
-        { q: "What is the hardest natural substance?", a: "Diamond" }
+        { q: "Does Nicolas prefer Tea or Coffee", a: "Coffee" },
+        { q: "This is Nicolas favourite game\na) Clash Royal\nb) Dave the Diver\nc) Osu!\nd) Melatonin", a: "Dave the Diver" },
+        { q: "Does Nicolas prefer to shower in the morning or night", a: "Morning" },
+        { q: "This is Nicolas favourite topping on instant noodles\na) Seasame Seeds\nb) Egg\nc) Sausage\nd) Mushroom", a: "Egg" },
+        { q: "This is Nicolas favourite anime of all time\na) Kotaro Lives Alone\nb) Horimiya\nc) Frieren\nd) Dragon Ball", a: "Kotaro Lives Alone" }
         ],
         // Who is that
         [
-        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
-        { q: "What is the fastest land animal?", a: "Cheetah" },
-        { q: "What planet is known as the Red Planet?", a: "Mars" },
-        { q: "How many continents are there?", a: "7" },
-        { q: "What is the hardest natural substance?", a: "Diamond" }
+        { q: "images_blurred/samuel_200.jpg", a: "images_original/samuel_200.jpg", isImage: true },
+        { q: "images_blurred/matthew_400.jpg", a: "images_original/matthew_400.jpg", isImage: true },
+        { q: "images_blurred/owen_600.jpg", a: "images_original/owen_600.jpg", isImage: true },
+        { q: "images_blurred/nic_800.jpg", a: "images_original/nic_800.jpg", isImage: true },
+        { q: "images_blurred/3_people_1000.jpg", a: "images_original/3_people_1000.jpg", isImage: true }
         ],
     ];
 
@@ -196,6 +196,7 @@
               col,
               question: question.q,
               answer: question.a,
+              isImage: question.isImage || false,
               fromBoard: window.location.pathname
             }));
 
@@ -219,7 +220,7 @@
         nextBtn.style.border = "none";
         nextBtn.style.cursor = "pointer";
         nextBtn.onclick = () => {
-          window.location.href = "matthew_board.html"; 
+          window.location.href = "Nicolas_board.html"; 
         };
         document.body.appendChild(nextBtn);
       }

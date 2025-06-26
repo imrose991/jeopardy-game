@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fast Money Round</title>
+  <style>
+    body {
+      background-color: #000428;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .question-container {
+      margin: 20px auto;
+      font-size: 24px;
+      background-color: #1a1a40;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+    }
+
+    .answer-box {
+      font-size: 20px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .player-area {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 30px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #1a1a40;
+      padding: 20px;
+      border-radius: 10px;
+      width: 200px;
+    }
+
+    .player img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+      margin-bottom: 10px;
+    }
+
+    .answer-input {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    input[type="number"] {
+      padding: 6px;
+      font-size: 16px;
+      width: 100px;
+      text-align: center;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #fcd000;
+      color: black;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #e0b800;
+    }
+
+    .result {
+      font-size: 22px;
+      margin-top: 30px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💰 Fast Money Round 💰</h1>
+
+  <div id="fastMoneyContainer"></div>
+  <div class="result" id="finalResult"></div>
+
+  <script>
+    const players = JSON.parse(sessionStorage.getItem("fastMoneyPlayers")) || [];
+
+    const questions = [
+      { q: "How many days has the group chat been active for?", a: 1140 },
+      { q: "What is the total amount of messages the group chat has sent?", a: 26483 },
+      { q: "How many unique numbers have joined the group chat?", a: 15 },
+      { q: "What is the percentage of conversation Matthew participates in?", a: 33.84 },
+      { q: "How many consecutive messages did Keefer send at one time?", a: 56 },
+    ];
+
+    const container = document.getElementById("fastMoneyContainer");
+
+    questions.forEach((item, i) => {
+      const block = document.createElement("div");
+      block.className = "question-container";
+      block.innerHTML = `
+        <div><strong>Q${i + 1}:</strong> ${item.q}</div>
+        <div class="answer-box" id="answer-${i}">Answer: ${item.a}</div>
+        <button onclick="toggleAnswer(${i})">Show/Hide Answer</button>
+
+        <div class="player-area">
+          ${players.map((p, idx) => `
+            <div class="player">
+              <img src="${p.icon}" alt="${p.name}">
+              <div>${p.name}</div>
+              <div class="answer-input">
+                <input type="number" step="any" id="input-${idx}-${i}" placeholder="Your answer">
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      container.appendChild(block);
+    });
+
+    function toggleAnswer(i) {
+      const box = document.getElementById(`answer-${i}`);
+      box.style.display = box.style.display === "none" ? "block" : "none";
+    }
+
+    function calculateResults() {
+      let totalDiff = [0, 0]; // [player1Diff, player2Diff]
+
+      questions.forEach((q, i) => {
+        players.forEach((_, idx) => {
+          const val = parseFloat(document.getElementById(`input-${idx}-${i}`).value) || 0;
+          totalDiff[idx] += Math.abs(val - q.a);
+        });
+      });
+
+      const resultBox = document.getElementById("finalResult");
+
+      if (totalDiff[0] < totalDiff[1]) {
+        resultBox.innerText = `🏆 ${players[0].name} wins! (Closer by ${Math.round(totalDiff[1] - totalDiff[0])} points)`;
+      } else if (totalDiff[1] < totalDiff[0]) {
+        resultBox.innerText = `🏆 ${players[1].name} wins! (Closer by ${Math.round(totalDiff[0] - totalDiff[1])} points)`;
+      } else {
+        resultBox.innerText = `🤝 It's a tie! Both were equally close.`;
+      }
+    }
+  </script>
+
+  <button onclick="calculateResults()">Calculate Winner</button>
+
+</body>
+</html>

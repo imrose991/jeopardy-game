@@ -99,51 +99,51 @@
     const categoryNames = [
         "Favourite things",
         "Matthew Trivia",
-        "4C Trivia",
-        "Category 4",      // You can rename this later
-        "Who is that"
+        "Isaac Trivia",
+        "Preferences", 
+        "What is that Quote"
     ];
 
     const questionData = [
         // Favourite things
         [
-        { q: "What is the capital of France?", a: "Paris" },
-        { q: "What is 2 + 2?", a: "4" },
-        { q: "What color is the sky?", a: "Blue" },
-        { q: "What gas do we breathe?", a: "Oxygen" },
-        { q: "What is H2O?", a: "Water" }
+        { q: "This is Matthew favourite cuisine", a: "Japanese" },
+        { q: "This is Matthew favourite animal\na) Parrot\nb) Cat\nc) Dolphin\nd) Red Panda", a: "Red Panda" },
+        { q: "This is Matthew favourite snack\na) Tom & Jerry Snack\nb) Calbee Prawn Cracker\nc) Maeadows Chips\nd) Werther's Salted Caramel Popcorn", a: "Tom & Jerry Snack" },
+        { q: "This is Matthew favourite movie/tv show\na) Kitchen Nightmares\nb) Running Man\nc) Kung Fu Panda\nd) Phineas and Ferb", a: "Running Man" },
+        { q: "This is Matthew favourite country to travel to", a: "Hong Kong" }
         ],
         // Matthew Trivia
         [
-        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
-        { q: "What is the fastest land animal?", a: "Cheetah" },
-        { q: "What planet is known as the Red Planet?", a: "Mars" },
-        { q: "How many continents are there?", a: "7" },
-        { q: "What is the hardest natural substance?", a: "Diamond" }
+        { q: "This is Matthew cca that they were in during secondary school", a: "Scouts" },
+        { q: "This is the first app Matthew open when he wakes up\na) Youtube\nb) Whatsapp\nc) Twitter\nd) Telegram", a: "Telegram" },
+        { q: "This is Matthew first username when they started valorant", a: "Y3llowD0g" },
+        { q: "This is something Matthew keep procrastinating\n\nHint: Something to do with a game he is playing", a: "Finishing his geometry dash level" },
+        { q: "Which fact of matthew is true\na) Matthew spotify wrapped once had Minecraft abient music in the top 5\nb) Matthew once joined the wrong zoom call and stayed for 20 minute before realising\nc) Matthew had over 300+ books of X-adventure comic books", a: "Matthew had over 300+ books of X-adventure comic books" }
         ],
-        // 4C Trivia
+        // Isaac Trivia
         [
-        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
-        { q: "What is the fastest land animal?", a: "Cheetah" },
-        { q: "What planet is known as the Red Planet?", a: "Mars" },
-        { q: "How many continents are there?", a: "7" },
-        { q: "What is the hardest natural substance?", a: "Diamond" }
+        { q: "Other than Chinese, what did I score the lowest on during Os", a: "Chemistry" },
+        { q: "This childhood cartoon is my favourite cartoon of all time\na) Teen titans\nb) Gravity falls\nc) Phineas and Ferb\nd) Powerpuff Girls", a: "Gravity falls" },
+        { q: "How many times have I permed my hair", a: "4" },
+        { q: "Which game have I spent the 3rd most hours in combined", a: "Geometry dash" },
+        { q: "Which is the first game I got good at\na) Minecraft\nb) Btd Battles\nc) Geometry Dash\nd) Valorant", a: "Btd Battles" }
         ],
-        // Category 4
+        // Preference
         [
-        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
-        { q: "What is the fastest land animal?", a: "Cheetah" },
-        { q: "What planet is known as the Red Planet?", a: "Mars" },
-        { q: "How many continents are there?", a: "7" },
-        { q: "What is the hardest natural substance?", a: "Diamond" }
+        { q: "Does Matthew prefer Tea or Coffee", a: "Coffee" },
+        { q: "This is Matthew favourite game\na) Minecraft\nb) Valorant\nc) Osu\nd) TF2", a: "TF2" },
+        { q: "Does Matthew prefer to shower in the morning or night", a: "Morning" },
+        { q: "This is Matthew favourite topping on instant noodles\na) Seasame Seeds\nb) Egg\nc) Sausage\nd) Mushroom", a: "Sausage" },
+        { q: "This is Matthew favourite anime of all time", a: "Violet Evergarden" }
         ],
-        // Who is that
+        // What is the Quote
         [
-        { q: "Who painted the Mona Lisa?", a: "Leonardo da Vinci" },
-        { q: "What is the fastest land animal?", a: "Cheetah" },
-        { q: "What planet is known as the Red Planet?", a: "Mars" },
-        { q: "How many continents are there?", a: "7" },
-        { q: "What is the hardest natural substance?", a: "Diamond" }
+        { q: "Chloe: What does the B in USB stand for?\nIsaac: ____\nIsaac: ok so what does the A in USA stand for?\nChloe: ________?", a: "bus, airplane" },
+        { q: "Samuel: The same water that hardens the _____\n softens the ______", a: "Eggs, Potato" },
+        { q: "Owen: _____ you're so hot", a: "Isaac" },
+        { q: "Samuel: if it is a lamb its shepards pie,\nif it is beef its a farmers pie,\nif it is fish its a fishermans pie,\nif it is pork its an _________ pie", a: "islamaphobic" },
+        { q: "Isaac: When you have big _____, every _____ feels small", a: "hands, ass" }
         ],
     ];
 
@@ -197,6 +197,7 @@
               col,
               question: question.q,
               answer: question.a,
+              isImage: question.isImage || false,
               fromBoard: window.location.pathname
             }));
 
