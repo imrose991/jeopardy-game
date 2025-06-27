@@ -108,34 +108,34 @@
         // Favourite things
         [
         { q: "This is Matthew favourite cuisine", a: "Japanese" },
-        { q: "This is Matthew favourite animal\n\na) Parrot\nb) Cat\nc) Dolphin\nd) Red Panda", a: "Red Panda" },
+        { q: "This is Matthew favourite animal", a: "Red Panda" },
         { q: "This is Matthew favourite country to travel to", a: "Hong Kong" },
-        { q: "This is Matthew favourite snack\n\na) Tom & Jerry Snack\nb) Calbee Prawn Cracker\nc) Maeadows Chips\nd) Werther's Salted Caramel Popcorn", a: "Tom & Jerry Snack" },
-        { q: "This is Matthew favourite movie/tv show\n\na) Kitchen Nightmares\nb) Running Man\nc) Kung Fu Panda\nd) Phineas and Ferb", a: "Running Man" }
+        { q: "This is Matthew favourite snack", a: "Tom & Jerry Snack" },
+        { q: "This is Matthew favourite movie/tv show", a: "Running Man" }
         ],
         // Matthew Trivia
         [
         { q: "This is Matthew cca that they were in during secondary school", a: "Scouts" },
         { q: "This is Matthew first username when they started valorant", a: "Y3llowD0g" },
-        { q: "This is the first app Matthew open when he wakes up\n\na) Youtube\nb) Whatsapp\nc) Twitter\nd) Telegram", a: "Telegram" },
+        { q: "This is the first app Matthew open when he wakes up", a: "Telegram" },
         { q: "This is something Matthew keep procrastinating\n\nHint: Something to do with a game he is playing", a: "Finishing his geometry dash level" },
-        { q: "Which fact of Matthew is true\n\na) Matthew spotify wrapped once had Minecraft ambient music in the top 5\nb) Matthew once joined the wrong zoom call and stayed for 30 minute before realising\nc) Matthew had over 300+ books of X-adventure comic books", a: "Matthew had over 300+ books of X-adventure comic books" }
+        { q: "Which fact of Matthew is true\n\na) Matthew spotify wrapped once had Minecraft ambient music in the top 5\nb) Matthew once joined the wrong zoom call and stayed for 30 minute before realising\nc) Matthew had over 300+ books of X-adventure comic books", a: "Matthew had over 300+ books of X-adventure comic books", dailyDouble: true }
         ],
         // Isaac Trivia
         [
         { q: "Other than Chinese, what did I score the lowest on during Os", a: "Chemistry" },
-        { q: "This childhood cartoon is my favourite cartoon of all time\n\na) Teen titans\nb) Gravity falls\nc) Phineas and Ferb\nd) Powerpuff Girls", a: "Gravity falls" },
+        { q: "This childhood cartoon is my favourite cartoon of all time", a: "Gravity falls" },
         { q: "How many times have I permed my hair", a: "4" },
         { q: "Which game have I spent the 3rd most hours in combined", a: "Geometry dash" },
-        { q: "Which is the first game I got good at\n\na) Minecraft\nb) Btd Battles\nc) Geometry Dash\nd) Valorant", a: "Btd Battles" }
+        { q: "Which is the first game I got good at", a: "Btd Battles" }
         ],
         // Preference
         [
         { q: "Does Matthew prefer Tea or Coffee", a: "Coffee" },
         { q: "Does Matthew prefer to shower in the morning or night", a: "Morning" },
-        { q: "This is Matthew favourite game\n\na) Minecraft\nb) Valorant\nc) Rocket League\nd) TF2", a: "TF2" },
-        { q: "This is Matthew favourite topping on instant noodles\n\na) Seasame Seeds\nb) Egg\nc) Sausage\nd) Mushroom", a: "Sausage" },
-        { q: "This is Matthew favourite anime of all time\n\na) Baki\nb) Violet Evergarden\nc) Spy x Family\nd) Vinland Saga", a: "Violet Evergarden" }
+        { q: "This is Matthew favourite game", a: "TF2" },
+        { q: "This is Matthew favourite topping on instant noodles", a: "Sausage" },
+        { q: "This is Matthew favourite anime of all time", a: "Violet Evergarden" }
         ],
         // What is the Quote
         [
@@ -198,6 +198,7 @@
               question: question.q,
               answer: question.a,
               isImage: question.isImage || false,
+              dailyDouble: question.dailyDouble || false,
               fromBoard: window.location.pathname
             }));
 

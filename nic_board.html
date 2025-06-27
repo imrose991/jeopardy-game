@@ -107,18 +107,18 @@
         // Favourite things
         [
         { q: "This is Nicolas favourite cuisine", a: "Italian" },
-        { q: "This is Nicolas favourite country to travel to\n\na) Netherlands\nb) Switzerland\nc) Italy\nd) Australia", a: "Switzerland" },
-        { q: "This is Nicolas favourite animal\n\na) Sloth\nb) Bear\nc) Panda\nd) Artic Fox", a: "Sloth" },
-        { q: "This is Nicolas favourite snack\n\na) Kinder Bueno\nb) Calbee Hot and Spicy\nc) Kit Kat\nd) Mamee", a: "Kit Kat" },
-        { q: "This is Nicolas favourite movie/tv show\n\na) A Man Called Otto\nb) The Lincoln Lawyer\nc) Guardian the Lonely And Great God\nd) When Life Gives You Tangerines", a: "A Man Called Otto" }
+        { q: "This is Nicolas favourite country to travel to", a: "Switzerland" },
+        { q: "This is Nicolas favourite animal", a: "Sloth" },
+        { q: "This is Nicolas favourite snack", a: "Kit Kat" },
+        { q: "This is Nicolas favourite movie/tv show", a: "A Man Called Otto" }
         ],
         // Nic Trivia
         [
         { q: "This is Nicolas CCA that they were in\nduring secondary school", a: "Table Tennis" },
-        { q: "This is the first app Nicolas open when he wakes up\n\na) Instagram\nb) Telegram\nc) Financial Times\nd) Moomoo", a: "Financial Times" },
-        { q: "Which fact of Nicolas is true\n\na) Nicolas had cold shower for a month cause he thought it was better for him\nb) Nicolas almost got kidnapped when he went to europe\nc) Nicolas tried to learn the violin during covid", a: "Nicolas almost got kidnapped when he went to europe" },
+        { q: "This is the first app Nicolas open when he wakes up", a: "Financial Times" },
+        { q: "Which fact of Nicolas is true\n\na) Nicolas had cold shower for a month cause he thought it was better for him\nb) Nicolas almost got kidnapped when he went to europe\nc) Nicolas tried to learn the violin during covid", a: "Nicolas almost got kidnapped when he went to europe", dailyDouble: true },
         { q: "This is the first person Nicolas know in the server", a: "Samuel" },
-        { q: "This is something Nicolas keep procrastinating\n\na) Practical Driving class\nb) Going back to the gym\nc) Plan his next oversea trip", a: "Practical driving class" },
+        { q: "This is something Nicolas keep procrastinating", a: "Practical driving class" },
         ],
         // 4C Trivia
         [
@@ -132,9 +132,9 @@
         [
         { q: "Does Nicolas prefer Tea or Coffee", a: "Coffee" },
         { q: "Does Nicolas prefer to shower in the morning or night", a: "Morning" },
-        { q: "This is Nicolas favourite topping on instant noodles\n\na) Seasame Seeds\nb) Egg\nc) Sausage\nd) Mushroom", a: "Egg" },
-        { q: "This is Nicolas favourite anime of all time\n\na) Kotaro Lives Alone\nb) Horimiya\nc) Frieren\nd) Dragon Ball", a: "Kotaro Lives Alone" },
-        { q: "This is Nicolas favourite game\n\na) Clash Royal\nb) Dave the Diver\nc) Osu!\nd) Melatonin", a: "Dave the Diver" }
+        { q: "This is Nicolas favourite topping on instant noodles", a: "Egg" },
+        { q: "This is Nicolas favourite anime of all time", a: "Kotaro Lives Alone" },
+        { q: "This is Nicolas favourite game", a: "Dave the Diver" }
         ],
         // Who is that
         [
@@ -197,6 +197,7 @@
               question: question.q,
               answer: question.a,
               isImage: question.isImage || false,
+              dailyDouble: question.dailyDouble || false,
               fromBoard: window.location.pathname
             }));
 

@@ -85,67 +85,140 @@
   <button id="markUsedBtn" class="adjust-btn" style="margin-top: 15px; font-size: 18px;">Used & Continue</button>
 
   <script>
-    const playerDisplay = document.getElementById("playerDisplay");
-    const players = JSON.parse(sessionStorage.getItem("players")) || [];
-    const meta = JSON.parse(sessionStorage.getItem("questionMeta")) || { category: "Unknown", points: 0 };
+  const playerDisplay = document.getElementById("playerDisplay");
+  const players = JSON.parse(sessionStorage.getItem("players")) || [];
+  const meta = JSON.parse(sessionStorage.getItem("questionMeta")) || { category: "Unknown", points: 0 };
+  const isDailyDouble = meta.dailyDouble === true;
+  const selectedPlayerIndex = meta.dailyDoublePlayerIndex;
 
-    document.getElementById("categoryHeader").innerText = `${meta.category} - $${meta.points}`;
-    const questionBox = document.getElementById("questionDisplay");
+  document.getElementById("categoryHeader").innerText = `${meta.category} - $${meta.points}`;
+  const questionBox = document.getElementById("questionDisplay");
 
+  // Daily Double UI setup
+  if (isDailyDouble) {
+    document.body.insertAdjacentHTML("afterbegin", `
+      <div id="dailyDoubleBanner" style="font-size: 26px; margin-bottom: 20px; font-weight: bold; color: gold;">
+        🎉 DAILY DOUBLE 🎉
+      </div>
+    `);
+
+    questionBox.innerText = "Wager first to reveal the question!";
+
+    const wagerSection = document.createElement("div");
+    wagerSection.id = "wagerSection";
+    wagerSection.style.margin = "20px 0";
+    wagerSection.innerHTML = `
+      <div style="margin-bottom: 10px;">
+        <label for="playerSelect">Select player: </label>
+        <select id="playerSelect" style="font-size: 16px;"></select>
+      </div>
+      <label for="wagerInput">Enter your wager: </label>
+      <input type="number" id="wagerInput" min="0" style="font-size: 16px; width: 80px; text-align: center;" />
+      <button class="adjust-btn" onclick="confirmWager()">Confirm</button>
+    `;
+    questionBox.parentElement.insertBefore(wagerSection, questionBox.nextSibling);
+    document.getElementById("revealBtn").style.display = "none";
+
+    const playerSelect = document.getElementById("playerSelect");
+    players.forEach((p, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.text = p.name;
+      playerSelect.appendChild(option);
+    });
+
+    window.confirmWager = function () {
+      const wager = parseInt(document.getElementById("wagerInput").value);
+      const selectedIndex = parseInt(document.getElementById("playerSelect").value);
+      if (isNaN(wager) || wager < 0) {
+        alert("Please enter a valid wager.");
+        return;
+      }
+
+      meta.points = wager;
+      meta.dailyDoublePlayerIndex = selectedIndex;
+      sessionStorage.setItem("questionMeta", JSON.stringify(meta));
+
+      document.getElementById("wagerSection").style.display = "none";
+      document.getElementById("revealBtn").style.display = "inline-block";
+
+      if (meta.isImage) {
+        questionBox.innerHTML = `<img src="${meta.question}" alt="Who is that?" style="max-width: 100%; border-radius: 10px; border: 3px solid white;">`;
+      } else {
+        questionBox.innerText = meta.question || "Question missing";
+      }
+
+      renderPlayers(); // refresh with locked buttons
+    };
+  } else {
+    // Normal question display
     if (meta.isImage) {
       questionBox.innerHTML = `<img src="${meta.question}" alt="Who is that?" style="max-width: 100%; border-radius: 10px; border: 3px solid white;">`;
     } else {
       questionBox.innerText = meta.question || "Question missing";
     }
+  }
 
-    document.getElementById("revealBtn").addEventListener("click", () => {
-      const answerBox = document.getElementById("answerDisplay");
+  // Reveal Answer
+  document.getElementById("revealBtn").addEventListener("click", () => {
+    const answerBox = document.getElementById("answerDisplay");
+    if (meta.isImage) {
+      answerBox.innerHTML = `<img src="${meta.answer}" alt="Answer image" style="max-width: 100%; border-radius: 10px; border: 3px solid white;">`;
+    } else {
+      answerBox.innerText = `Answer: ${meta.answer || "Answer missing"}`;
+    }
+    answerBox.style.display = "block";
+  });
 
-      if (meta.isImage) {
-        // Show the original image
-        answerBox.innerHTML = `<img src="${meta.answer}" alt="Answer image" style="max-width: 100%; border-radius: 10px; border: 3px solid white;">`;
-      } else {
-        // Show text answer
-        answerBox.innerText = `Answer: ${meta.answer || "Answer missing"}`;
-      }
-
-      answerBox.style.display = "block";
-    });
-
+  // Render players
+  function renderPlayers() {
+    playerDisplay.innerHTML = ""; // clear first
     players.forEach((p, i) => {
       const div = document.createElement("div");
       div.className = "player";
-        div.innerHTML = `
+
+      // Only allow score adjustment if not Daily Double or this is the selected player
+      const canAdjust = !isDailyDouble || i === meta.dailyDoublePlayerIndex;
+
+      div.innerHTML = `
         <img src="${p.icon}" alt="${p.name}" />
         <div>${p.name}</div>
         <div style="display: flex; align-items: center; gap: 8px;">
-            <button class="adjust-btn" style="background-color: #4CAF50;" onclick="adjustScore(${i}, ${meta.points})">+</button>
-            <div class="score" id="score-${i}" style="min-width: 40px;">${p.score || 0}</div>
+          ${canAdjust ? `
+            <button class="adjust-btn" style="background-color: #4CAF50;" onclick="adjustScore(${i}, Math.floor(${meta.points} / 2))">+</button>
+          ` : `<div style="width: 36px;"></div>`}
+          <div class="score" id="score-${i}" style="min-width: 40px;">${p.score || 0}</div>
+          ${canAdjust ? `
             <button class="adjust-btn" style="background-color: #e74c3c;" onclick="adjustScore(${i}, -${meta.points})">–</button>
+          ` : `<div style="width: 36px;"></div>`}
         </div>
-        `;
+      `;
       playerDisplay.appendChild(div);
     });
+  }
 
-    function adjustScore(index, change) {
+  renderPlayers();
+
+  function adjustScore(index, change) {
     players[index].score = (players[index].score || 0) + change;
     document.getElementById(`score-${index}`).innerText = players[index].score;
-    sessionStorage.setItem("players", JSON.stringify(players)); // <-- persists
-    }
+    sessionStorage.setItem("players", JSON.stringify(players));
+  }
 
-    document.getElementById("backBtn").addEventListener("click", () => {
+  document.getElementById("backBtn").addEventListener("click", () => {
     window.location.href = meta.fromBoard;
-    });
+  });
 
-    document.getElementById("markUsedBtn").addEventListener("click", () => {
+  document.getElementById("markUsedBtn").addEventListener("click", () => {
     let usedTiles = JSON.parse(sessionStorage.getItem("usedTiles") || "[]");
     const tileKey = `${meta.col}-${meta.row}`;
     if (!usedTiles.includes(tileKey)) {
-        usedTiles.push(tileKey);
-        sessionStorage.setItem("usedTiles", JSON.stringify(usedTiles));
+      usedTiles.push(tileKey);
+      sessionStorage.setItem("usedTiles", JSON.stringify(usedTiles));
     }
     window.location.href = meta.fromBoard;
-    });
-  </script>
+  });
+</script>
+
 </body>
 </html>
